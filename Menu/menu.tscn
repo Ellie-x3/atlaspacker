@@ -66,3 +66,5 @@ text = "This is a in-house development aide tool for Phuico
 This Tool is used to pack multiple spritesheets into one"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/ColorRect/Button" to="." method="_on_button_pressed"]
