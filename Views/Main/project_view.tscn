@@ -1,13 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://wxlwg88wvgjf"]
+[gd_scene load_steps=5 format=3 uid="uid://wxlwg88wvgjf"]
 
 [ext_resource type="Script" uid="uid://dx8cihoyhv6q5" path="res://Views/Main/project_view.gd" id="1_2l8qy"]
+[ext_resource type="Texture2D" uid="uid://g4efpfam2cjr" path="res://meetinggreet_59.png" id="2_5dkfs"]
+[ext_resource type="Script" uid="uid://c3p5cld1dudqi" path="res://Views/Main/camera.gd" id="2_jmiu7"]
+
+[sub_resource type="SystemFont" id="SystemFont_jmiu7"]
+font_names = PackedStringArray("Consolas")
 
 [node name="ProjectView" type="Node2D"]
 script = ExtResource("1_2l8qy")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="Interface" type="CanvasLayer" parent="."]
 
-[node name="UserInterface" type="Control" parent="CanvasLayer"]
+[node name="UserInterface" type="Control" parent="Interface"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,76 +22,94 @@ offset_bottom = 720.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ToolBar" type="Control" parent="CanvasLayer/UserInterface"]
+[node name="ToolBar" type="Control" parent="Interface/UserInterface"]
 anchors_preset = 0
-offset_right = 1280.0
-offset_bottom = 40.0
+offset_right = 1920.0
+offset_bottom = 80.0
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UserInterface/ToolBar"]
+[node name="ColorRect" type="ColorRect" parent="Interface/UserInterface/ToolBar"]
 layout_mode = 0
-offset_right = 1280.0
-offset_bottom = 40.0
+offset_right = 1920.0
+offset_bottom = 80.0
 color = Color(0.619608, 0.619608, 0.619608, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UserInterface/ToolBar"]
+[node name="MarginContainer" type="MarginContainer" parent="Interface/UserInterface/ToolBar"]
 layout_mode = 0
-offset_right = 403.0
-offset_bottom = 40.0
-theme_override_constants/margin_left = 5
-theme_override_constants/margin_top = 2
-theme_override_constants/margin_bottom = 2
+offset_right = 750.0
+offset_bottom = 76.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/UserInterface/ToolBar/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
+[node name="ColorRect" type="ColorRect" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.505882, 0.505882, 0.505882, 1)
 
-[node name="Label" type="Label" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect"]
+[node name="Label" type="Label" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect"]
 layout_mode = 0
-offset_right = 92.0
-offset_bottom = 36.0
+offset_right = 177.0
+offset_bottom = 71.0
+theme_override_fonts/font = SubResource("SystemFont_jmiu7")
+theme_override_font_sizes/font_size = 36
 text = "Open"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ColorRect2" type="ColorRect" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
+[node name="ColorRect2" type="ColorRect" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.505882, 0.505882, 0.505882, 1)
 
-[node name="Label" type="Label" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect2"]
-offset_right = 92.0
-offset_bottom = 36.0
+[node name="Label" type="Label" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect2"]
+layout_mode = 0
+offset_right = 178.0
+offset_bottom = 71.0
+theme_override_fonts/font = SubResource("SystemFont_jmiu7")
+theme_override_font_sizes/font_size = 36
 text = "Tools"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ColorRect3" type="ColorRect" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
+[node name="ColorRect3" type="ColorRect" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.505882, 0.505882, 0.505882, 1)
 
-[node name="Label" type="Label" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect3"]
-offset_right = 92.0
-offset_bottom = 36.0
+[node name="Label" type="Label" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect3"]
+layout_mode = 0
+offset_right = 178.0
+offset_bottom = 71.0
+theme_override_fonts/font = SubResource("SystemFont_jmiu7")
+theme_override_font_sizes/font_size = 36
 text = "Debug"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ColorRect4" type="ColorRect" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
+[node name="ColorRect4" type="ColorRect" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.505882, 0.505882, 0.505882, 1)
 
-[node name="Label" type="Label" parent="CanvasLayer/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect4"]
-offset_right = 93.0
-offset_bottom = 36.0
+[node name="Label" type="Label" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect4"]
+layout_mode = 0
+offset_right = 178.0
+offset_bottom = 71.0
+theme_override_fonts/font = SubResource("SystemFont_jmiu7")
+theme_override_font_sizes/font_size = 36
 text = "Export"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(962, 545)
+script = ExtResource("2_jmiu7")
+zoom_speed = 0.05
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(524, 561)
+texture = ExtResource("2_5dkfs")
