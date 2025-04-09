@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://csy6ev4jrcn3p"]
+
+[node name="FileDialog" type="FileDialog"]
+title = "Open File(s)"
+initial_position = 1
+visible = true
+ok_button_text = "Open"
+file_mode = 1
+access = 2
+filters = PackedStringArray("*.png")
+use_native_dialog = true
