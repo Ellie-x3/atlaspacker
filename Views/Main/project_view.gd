@@ -8,6 +8,7 @@ var selected_files: PackedStringArray
 var image_paths: Dictionary[Image, String] = {}
 var images: Array[Image] = []
 var images_data: Array[ImageData]
+var textures: Dictionary[String, ImageTexture]
 
 func _init() -> void:
     RenderingServer.set_default_clear_color(Color8(220,220,220))
@@ -33,8 +34,18 @@ func set_image_data() -> void:
         data.width = img.get_width()
         data.path = image_paths[img]
         images_data.append(data)
+
         var texture: ImageTexture = create_texture_from_image(img)
-        print(texture)
+        textures[data.path] = texture
+    
+    create_sprite_from_texture()
+
+func create_sprite_from_texture() -> void:
+    for texture: ImageTexture in textures.values():
+        var sprite: Sprite2D = Sprite2D.new()
+        sprite.texture = texture
+        sprite.position = $Images.position
+        $Images.add_child(sprite)
 
 func create_texture_from_image(img: Image) -> ImageTexture:
     return ImageTexture.create_from_image(img)
