@@ -1,8 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://wxlwg88wvgjf"]
+[gd_scene load_steps=11 format=3 uid="uid://wxlwg88wvgjf"]
 
 [ext_resource type="Script" uid="uid://dx8cihoyhv6q5" path="res://Views/Main/project_view.gd" id="1_2l8qy"]
 [ext_resource type="Script" uid="uid://cnwl2i78kr7ds" path="res://Views/Main/open_button.gd" id="2_2vv4t"]
 [ext_resource type="Script" uid="uid://c3p5cld1dudqi" path="res://Views/Main/camera.gd" id="2_jmiu7"]
+[ext_resource type="Script" uid="uid://dyq5r10qwv5uc" path="res://Views/Main/resize_button.gd" id="3_2vv4t"]
+[ext_resource type="Script" uid="uid://s6l3p14reu34" path="res://Views/Main/debug_button.gd" id="4_iqq4d"]
+[ext_resource type="Script" uid="uid://cmk7d08tonwyw" path="res://Views/Main/reorder_button.gd" id="5_aetuw"]
 
 [sub_resource type="SystemFont" id="SystemFont_jmiu7"]
 font_names = PackedStringArray("Consolas")
@@ -23,6 +26,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -1920.0
+offset_bottom = -1080.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -39,7 +44,7 @@ color = Color(0.619608, 0.619608, 0.619608, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="Interface/UserInterface/ToolBar"]
 layout_mode = 0
-offset_right = 750.0
+offset_right = 932.0
 offset_bottom = 76.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 4
@@ -67,8 +72,8 @@ vertical_alignment = 1
 [node name="OpenButton" type="Button" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect"]
 unique_name_in_owner = true
 layout_mode = 0
-offset_right = 177.0
-offset_bottom = 69.0
+offset_right = 176.0
+offset_bottom = 68.0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
@@ -89,12 +94,15 @@ text = "Resize"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Button" type="Button" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect2"]
-offset_right = 177.0
-offset_bottom = 69.0
+[node name="ResizeButton" type="Button" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect2"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 176.0
+offset_bottom = 68.0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
+script = ExtResource("3_2vv4t")
 
 [node name="ColorRect3" type="ColorRect" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -111,12 +119,39 @@ text = "Debug"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Button" type="Button" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect3"]
+[node name="DebugButton" type="Button" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect3"]
+layout_mode = 0
 offset_right = 177.0
-offset_bottom = 69.0
+offset_bottom = 68.0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
+script = ExtResource("4_iqq4d")
+
+[node name="ColorRect5" type="ColorRect" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.505882, 0.505882, 0.505882, 1)
+
+[node name="Label" type="Label" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect5"]
+layout_mode = 0
+offset_right = 178.0
+offset_bottom = 71.0
+theme_override_fonts/font = SubResource("SystemFont_jmiu7")
+theme_override_font_sizes/font_size = 36
+text = "Reorder"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReorderButton" type="Button" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect5"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 177.0
+offset_bottom = 68.0
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
+script = ExtResource("5_aetuw")
 
 [node name="ColorRect4" type="ColorRect" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -134,8 +169,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Button" type="Button" parent="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect4"]
+layout_mode = 0
 offset_right = 177.0
-offset_bottom = 69.0
+offset_bottom = 68.0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
@@ -147,9 +183,13 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
 position = Vector2(962, 545)
+limit_left = -500
+limit_top = -500
 script = ExtResource("2_jmiu7")
 zoom_speed = 0.05
+camera_speed = 2500.0
 
 [node name="Images" type="Node2D" parent="."]
-position = Vector2(124, 227)
+position = Vector2(71, 154)

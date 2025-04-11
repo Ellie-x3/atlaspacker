@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dl2ccd41ediba"
-path="res://.godot/imported/meetinggreet_59.png-0d8c5ddf9eabd017bbdbe50cbb4731f1.ctex"
+uid="uid://du6vvkkv47qmt"
+path="res://.godot/imported/meetingend_53.png-71204d5eb0b16e3d4452614506c2cff2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://meetinggreet_59.png"
-dest_files=["res://.godot/imported/meetinggreet_59.png-0d8c5ddf9eabd017bbdbe50cbb4731f1.ctex"]
+source_file="res://meetingend_53.png"
+dest_files=["res://.godot/imported/meetingend_53.png-71204d5eb0b16e3d4452614506c2cff2.ctex"]
 
 [params]
 
