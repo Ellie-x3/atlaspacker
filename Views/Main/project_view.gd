@@ -9,10 +9,7 @@ signal data_reorder
 @onready var _images_container: Node2D = $Images
 
 var image_paths: Dictionary[Image, String] = {}
-var images: Array[Image] = []
 var images_data: Array[ImageData]
-var textures: Dictionary[String, ImageTexture]
-var rects: Array[TextureRect] = []
 var rect_image_data: Dictionary[TextureRect, ImageData]
 
 var hovered_sprite: TextureRect = null
@@ -26,9 +23,6 @@ func _ready() -> void:
 
 		image_paths = {}
 		images_data = []
-		images = []
-		textures = {}
-		rects = []
 
 		for file: String in files:
 			var file_name: String = file.get_basename().get_file()
@@ -97,13 +91,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func create_images_from_files(files: PackedStringArray) -> void:
 	for img: String in files:
 		var image = Image.load_from_file(img)
-		images.append(image)
 		image_paths[image] = img
 	
 	set_image_data()
 	
 func set_image_data() -> void:
-	for img: Image in images:
+	for img: Image in image_paths.keys():
 		var data: ImageData = ImageData.new()
 		data.height = img.get_height()
 		data.width = img.get_width()
@@ -120,6 +113,7 @@ func set_image_data() -> void:
 		images_data.append(data)
 	
 	create_sprite_from_texture(images_data)
+	image_paths = {}
 
 func create_sprite_from_texture(data: Array[ImageData]) -> void:
 	var y_offset: float = 0
