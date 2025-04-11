@@ -2,6 +2,7 @@ class_name ProjectView
 extends Node2D
 
 signal request_data
+signal data_reorder
 
 @onready var _open_button: ToolBarButton = %OpenButton
 @onready var _resize_button: ResizeButton = %ResizeButton
@@ -11,8 +12,11 @@ var image_paths: Dictionary[Image, String] = {}
 var images: Array[Image] = []
 var images_data: Array[ImageData]
 var textures: Dictionary[String, ImageTexture]
+var rects: Array[TextureRect] = []
+var rect_image_data: Dictionary[TextureRect, ImageData]
 
 var hovered_sprite: TextureRect = null
+var selected_sprite: TextureRect = null
 
 func _init() -> void:
 	RenderingServer.set_default_clear_color(Color8(220,220,220))
@@ -24,6 +28,7 @@ func _ready() -> void:
 		images_data = []
 		images = []
 		textures = {}
+		rects = []
 
 		for file: String in files:
 			var file_name: String = file.get_basename().get_file()
@@ -50,14 +55,45 @@ func _ready() -> void:
 		_resize_button.transfer_data.emit(images_data)
 	)
 
+	data_reorder.connect(func() -> void: 
+		remove_sprites()
+		create_sprite_from_texture(images_data)
+	)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("Click") and hovered_sprite != null:
-		print(hovered_sprite.name)
-	
-	if event.is_action_pressed("ui_up"):
-		pass
 
+	if event.is_action_pressed("Click") and hovered_sprite != null:
+		
+		for rect: Variant in _images_container.get_children():
+			if rect is TextureRect:
+				if rect != hovered_sprite:
+					rect.queue_redraw()
+
+		selected_sprite = hovered_sprite
+		if selected_sprite.draw.is_connected(_on_draw):
+			selected_sprite.draw.disconnect(_on_draw)
+			selected_sprite.queue_redraw()
+			return
+
+		selected_sprite.draw.connect(_on_draw)
+		selected_sprite.queue_redraw()
+		print(images_data)
+	
+	if Input.is_action_just_pressed("ui_up") and selected_sprite != null:
+		var index: int = images_data.find(rect_image_data[selected_sprite])
+		if index != 0:
+			images_data[index] = images_data[index - 1]
+			images_data[index - 1] = rect_image_data[selected_sprite]
+			data_reorder.emit()
+
+	if Input.is_action_just_pressed("ui_down") and selected_sprite != null:
+		var index: int = images_data.find(rect_image_data[selected_sprite])
+		if index != images_data.size() - 1:
+			images_data[index] = images_data[index + 1]
+			images_data[index + 1] = rect_image_data[selected_sprite]
+			data_reorder.emit()
+
+	
 func create_images_from_files(files: PackedStringArray) -> void:
 	for img: String in files:
 		var image = Image.load_from_file(img)
@@ -93,21 +129,20 @@ func create_sprite_from_texture(data: Array[ImageData]) -> void:
 		sprite.texture = image.texture
 		sprite.position.x = 0
 		sprite.position.y = y_offset
-		
-		sprite.draw.connect(func() -> void: 
-			sprite.draw_line(Vector2(0, 0), Vector2(image.texture.get_width(), 0), Color.ORANGE, 3)
-			sprite.draw_line(Vector2(0, 0), Vector2(0, image.texture.get_height()), Color.ORANGE, 3)
 
-			sprite.draw_line(Vector2(0, image.texture.get_height()), Vector2(image.texture.get_width(), image.texture.get_height()), Color.ORANGE, 3)
-			sprite.draw_line(Vector2(image.texture.get_width(), 0), Vector2(image.texture.get_width(), image.texture.get_height()), Color.ORANGE, 3)
+		sprite.mouse_entered.connect(func() -> void: 
+			hovered_sprite = sprite
 		)
-
-		sprite.mouse_entered.connect(func() -> void: hovered_sprite = sprite)
-		sprite.mouse_exited.connect(func() -> void: hovered_sprite = null)
+		sprite.mouse_exited.connect(func() -> void:
+			hovered_sprite = null
+			if sprite.draw.is_connected(_on_draw):
+				sprite.draw.disconnect(_on_draw)
+		)
 
 		y_offset += image.texture.get_height()
 
 		_images_container.add_child(sprite)
+		rect_image_data[sprite] = image
 
 func remove_sprites() -> void:
 	var children: Variant = _images_container.get_children()
@@ -115,6 +150,15 @@ func remove_sprites() -> void:
 		if sprite is TextureRect:
 			_images_container.remove_child(sprite)
 			sprite.queue_free()
+
+func _on_draw() -> void:
+	var thicc: int = 5
+	hovered_sprite.draw_line(Vector2(0, 0), Vector2(hovered_sprite.texture.get_width(), 0), Color.ORANGE, thicc)
+	hovered_sprite.draw_line(Vector2(0, 0), Vector2(0, hovered_sprite.texture.get_height()), Color.ORANGE, thicc)
+
+	hovered_sprite.draw_line(Vector2(0, hovered_sprite.texture.get_height()), Vector2(hovered_sprite.texture.get_width(), hovered_sprite.texture.get_height()), Color.ORANGE, thicc)
+	hovered_sprite.draw_line(Vector2(hovered_sprite.texture.get_width(), 0), Vector2(hovered_sprite.texture.get_width(), hovered_sprite.texture.get_height()), Color.ORANGE, thicc)
+	
 
 func create_texture_from_image(img: Image) -> ImageTexture:
 	return ImageTexture.create_from_image(img)
