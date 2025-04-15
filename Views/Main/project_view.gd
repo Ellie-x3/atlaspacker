@@ -5,7 +5,7 @@ signal request_data
 signal data_reorder
 
 static var selected_sheet: TextureRect = null
-static var selected_frame: Rect2
+static var selected_frame: Dictionary[String, Variant]
 
 @onready var _open_button: ToolBarButton = %OpenButton
 @onready var _pixel_button: PixelButton = %PixelButton
@@ -75,6 +75,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			images_data[index + 1] = rect_image_data[selected_sprite]
 			data_reorder.emit()
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_accept"):
+		print("Meow")
+
 	
 func create_images_from_files(files: PackedStringArray) -> void:
 	for img: String in files:
@@ -142,36 +146,67 @@ func _on_draw() -> void:
 	hovered_sprite.draw_line(Vector2(0, hovered_sprite.texture.get_height()), Vector2(hovered_sprite.texture.get_width(), hovered_sprite.texture.get_height()), Color.ORANGE, thicc)
 	hovered_sprite.draw_line(Vector2(hovered_sprite.texture.get_width(), 0), Vector2(hovered_sprite.texture.get_width(), hovered_sprite.texture.get_height()), Color.ORANGE, thicc)
 
+func _on_draw_frame(x_position: int, frame_size: int, height: int) -> void:
+	var thicc: int = 4
+	hovered_sprite.draw_line(Vector2(x_position, 0), Vector2(x_position + frame_size, 0), Color.RED, thicc)
+	hovered_sprite.draw_line(Vector2(x_position, 0), Vector2(x_position, height), Color.RED, thicc)
+
+	hovered_sprite.draw_line(Vector2(x_position, height), Vector2(x_position + frame_size, height), Color.RED, thicc)
+	hovered_sprite.draw_line(Vector2(x_position + frame_size, 0), Vector2(x_position + frame_size, height), Color.RED, thicc)
+
 func _on_click() -> void:
 	match PixelButton.setting_pixel_data:
 		false:
-			if selected_sprite == null:
-				for rect: Variant in _images_container.get_children():
-						if rect is TextureRect:
-							if rect != hovered_sprite:
-								rect.queue_redraw()
+			for rect: Variant in _images_container.get_children():
+					if rect is TextureRect:
+						if rect != hovered_sprite:
+							if rect.draw.is_connected(_on_draw_frame):
+								rect.draw.disconnect(_on_draw_frame)
+							rect.queue_redraw()
 
-				selected_sprite = hovered_sprite
-				selected_sheet = hovered_sprite
-				if selected_sprite.draw.is_connected(_on_draw):
-					selected_sprite.draw.disconnect(_on_draw)
-					selected_sprite.queue_redraw()
-					return
+			selected_sprite = hovered_sprite
+			selected_sheet = hovered_sprite
 
-				selected_sprite.draw.connect(_on_draw)
+			if selected_sprite.draw.is_connected(_on_draw_frame):
+				selected_sprite.draw.disconnect(_on_draw_frame)
 				selected_sprite.queue_redraw()
+				
+			if selected_sprite.draw.is_connected(_on_draw):
+				selected_sprite.draw.disconnect(_on_draw)
+				selected_sprite.queue_redraw()
+				return
+
+			selected_sprite.draw.connect(_on_draw)
+			selected_sprite.queue_redraw()
+				
 		true:
-			if selected_sprite == null and hovered_sprite != selected_sprite:
+			if selected_sprite == null:
 				push_error("Fucked up getting correct texture when setting pixel data, yell at ellie")
 				return
 			
+			if hovered_sprite != selected_sprite:
+				return
+
 			var mouse_position_x: float = get_local_mouse_position().x - _images_container.position.x
 			var frame_size_x: float = rect_image_data[selected_sprite].width / rect_image_data[selected_sprite].frames
 			var frame_clicked: float = (mouse_position_x / frame_size_x) + 1
 			frame_clicked = floor(frame_clicked)
 			
 			var offset_x: float = (frame_clicked - 1) * frame_size_x
-			print(offset_x)
+			if selected_sprite.draw.is_connected(_on_draw_frame):
+				selected_sprite.draw.disconnect(_on_draw_frame)
+				selected_sprite.queue_redraw()
+
+			if selected_sprite.draw.is_connected(_on_draw):
+					selected_sprite.draw.disconnect(_on_draw)
+			
+			selected_sprite.draw.connect(_on_draw)
+			selected_sprite.draw.connect(_on_draw_frame.bind(offset_x, frame_size_x, rect_image_data[selected_sprite].height))
+			selected_sprite.queue_redraw()
+
+			selected_frame["Position"] = Vector2(offset_x, 0)
+			selected_frame["Frame"] = frame_clicked
+			selected_frame["Texture"] = rect_image_data[selected_sprite]
 
 func create_texture_from_image(img: Image) -> ImageTexture:
 	return ImageTexture.create_from_image(img)

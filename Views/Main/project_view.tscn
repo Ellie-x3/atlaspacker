@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://wxlwg88wvgjf"]
+[gd_scene load_steps=11 format=3 uid="uid://wxlwg88wvgjf"]
 
 [ext_resource type="Script" uid="uid://dx8cihoyhv6q5" path="res://Views/Main/project_view.gd" id="1_2l8qy"]
 [ext_resource type="Script" uid="uid://cnwl2i78kr7ds" path="res://Views/Main/open_button.gd" id="2_2vv4t"]
@@ -14,6 +14,9 @@ font_names = PackedStringArray("Consolas")
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2vv4t"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aetuw"]
+
+[sub_resource type="SystemFont" id="SystemFont_iqq4d"]
+font_names = PackedStringArray("Consolas")
 
 [node name="ProjectView" type="Node2D"]
 script = ExtResource("1_2l8qy")
@@ -73,6 +76,7 @@ unique_name_in_owner = true
 layout_mode = 0
 offset_right = 176.0
 offset_bottom = 68.0
+focus_mode = 0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
@@ -97,6 +101,7 @@ vertical_alignment = 1
 layout_mode = 0
 offset_right = 182.0
 offset_bottom = 68.0
+focus_mode = 0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
@@ -122,6 +127,7 @@ unique_name_in_owner = true
 layout_mode = 0
 offset_right = 181.0
 offset_bottom = 68.0
+focus_mode = 0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
@@ -146,9 +152,22 @@ vertical_alignment = 1
 layout_mode = 0
 offset_right = 182.0
 offset_bottom = 68.0
+focus_mode = 0
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_jmiu7")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2vv4t")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_aetuw")
+
+[node name="LineEdit" type="LineEdit" parent="Interface/UserInterface/ToolBar"]
+layout_mode = 0
+offset_left = 806.0
+offset_top = 9.0
+offset_right = 1121.0
+offset_bottom = 66.0
+focus_mode = 1
+theme_override_fonts/font = SubResource("SystemFont_iqq4d")
+theme_override_font_sizes/font_size = 48
+text = "10"
+placeholder_text = "frame delay"
 
 [node name="Menu" type="Control" parent="Interface/UserInterface"]
 unique_name_in_owner = true
