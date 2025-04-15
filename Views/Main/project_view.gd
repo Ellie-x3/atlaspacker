@@ -10,6 +10,7 @@ static var selected_frame: Dictionary[String, Variant]
 @onready var _open_button: ToolBarButton = %OpenButton
 @onready var _pixel_button: PixelButton = %PixelButton
 @onready var _images_container: Node2D = $Images
+@onready var _line_edit: LineEdit = %LineEdit
 
 var image_paths: Dictionary[Image, String] = {}
 var images_data: Array[ImageData]
@@ -26,6 +27,7 @@ func _ready() -> void:
 
 		image_paths = {}
 		images_data = []
+		selected_frame = {}
 
 		for file: String in files:
 			var file_name: String = file.get_basename().get_file()
@@ -76,9 +78,21 @@ func _unhandled_input(event: InputEvent) -> void:
 			data_reorder.emit()
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept"):
-		print("Meow")
+	if event.is_action_pressed("ui_accept") and PixelButton.setting_pixel_data:
+		if _line_edit.text == "" or not selected_frame or not images_data:
+			printerr("Error setting pixel data")
+			return
+		
+		if int(_line_edit.text) == 0 or typeof(int(_line_edit.text)) != TYPE_INT:
+			printerr("Error only put numbers and not = to 0 in line")
+			_line_edit.text = ""
+			return
 
+		PixelData.set_pixel_data(int(_line_edit.text), selected_frame, images_data)
+		data_reorder.emit()
+		_pixel_button.swap_state(!PixelButton.setting_pixel_data)
+		_line_edit.text = ""
+		_line_edit.hide()
 	
 func create_images_from_files(files: PackedStringArray) -> void:
 	for img: String in files:
@@ -136,7 +150,7 @@ func remove_sprites() -> void:
 		if sprite is TextureRect:
 			_images_container.remove_child(sprite)
 			sprite.queue_free()
-			selected_sheet = null
+			selected_sprite = null
 
 func _on_draw() -> void:
 	var thicc: int = 5
@@ -157,6 +171,7 @@ func _on_draw_frame(x_position: int, frame_size: int, height: int) -> void:
 func _on_click() -> void:
 	match PixelButton.setting_pixel_data:
 		false:
+			selected_frame = {}
 			for rect: Variant in _images_container.get_children():
 					if rect is TextureRect:
 						if rect != hovered_sprite:
@@ -206,7 +221,9 @@ func _on_click() -> void:
 
 			selected_frame["Position"] = Vector2(offset_x, 0)
 			selected_frame["Frame"] = frame_clicked
-			selected_frame["Texture"] = rect_image_data[selected_sprite]
+			selected_frame["Image"] = rect_image_data[selected_sprite]
+			selected_frame["Size"] = Vector2(frame_size_x, rect_image_data[selected_sprite].height)
+			_line_edit.show()
 
 func create_texture_from_image(img: Image) -> ImageTexture:
 	return ImageTexture.create_from_image(img)
