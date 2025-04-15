@@ -35,4 +35,4 @@ func _on_transfer(data: Array[ImageData]) -> void:
         y = max(y, frame.y)
     
     largest_frame = Vector2i(x, y)
-    print(data)
+    print(largest_frame)

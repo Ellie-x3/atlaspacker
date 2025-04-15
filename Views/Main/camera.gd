@@ -31,7 +31,5 @@ func _process(delta: float) -> void:
 
     offset.y += direction.y * (camera_speed / zoom.y) * delta
 
-    if Input.is_action_just_pressed("ui_accept"):
-        print(offset)
 
     

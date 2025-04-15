@@ -1,6 +1,8 @@
 class_name ToolBarButton
 extends Button
 
+signal transfer_data(data: Array[ImageData])
+
 func _ready() -> void:
     pressed.connect(_on_pressed)
 
