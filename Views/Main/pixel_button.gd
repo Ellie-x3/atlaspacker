@@ -16,7 +16,7 @@ func _on_pressed() -> void:
     
 func swap_state(state: bool) -> void:
     setting_pixel_data = state
-    print(setting_pixel_data)
+
     match setting_pixel_data:
         true:
             get_parent().color = on_color

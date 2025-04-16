@@ -79,6 +79,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept") and PixelButton.setting_pixel_data:
+		if _line_edit.text == "" and selected_frame:
+			PixelData.read_pixel_data(selected_frame)
+			return
+
 		if _line_edit.text == "" or not selected_frame or not images_data:
 			printerr("Error setting pixel data")
 			return
@@ -227,3 +231,39 @@ func _on_click() -> void:
 
 func create_texture_from_image(img: Image) -> ImageTexture:
 	return ImageTexture.create_from_image(img)
+
+func _on_export_pressed() -> void:
+	var children: Array = _images_container.get_children()
+
+	var textures: Array[TextureRect] = []
+	for texture: Variant in children:
+		if texture is TextureRect:
+			textures.append(texture)
+	
+	if textures == []:
+		printerr("Could not get textures")
+		return
+	
+	var max_height: int = 0
+	var max_width: int = 0
+
+	for texture: TextureRect in textures:
+		max_width = max(max_width, texture.texture.get_width()) 
+		max_height += texture.texture.get_height()
+
+	var image: Image = Image.create(max_width, max_height, true, Image.FORMAT_RGBA8)
+
+	var current_y: int = 0
+	for texture: ImageData in images_data:
+		var img: ImageTexture = texture.texture
+		if img:
+			var tex_image = img.get_image()
+			image.blit_rect(tex_image, Rect2(Vector2.ZERO, tex_image.get_size()), Vector2(0, current_y))
+			current_y += tex_image.get_height()
+
+	var err = image.save_png("res://combined.png")
+
+	if err == OK:
+		print("Exported!")
+	else:
+		printerr("Failed to export: ", err)

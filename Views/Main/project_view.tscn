@@ -189,3 +189,5 @@ camera_speed = 2500.0
 
 [node name="Images" type="Node2D" parent="."]
 position = Vector2(71, 154)
+
+[connection signal="pressed" from="Interface/UserInterface/ToolBar/MarginContainer/HBoxContainer/ColorRect4/Button" to="." method="_on_export_pressed"]

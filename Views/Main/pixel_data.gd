@@ -1,30 +1,35 @@
 class_name PixelData
 extends Node
 
-static func set_pixel_data(_data: int, _frame: Dictionary, images: Array[ImageData]) -> void:
+static func set_pixel_data(_data: int, _frame: Dictionary, images: Array[ImageData], y: int = 0) -> void:
 	var index: int = images.find(_frame["Image"])
 
 	var img: Image = images[index].texture.get_image()
 
-	img.set_pixel(_frame["Position"].x + 0, 0, Color8(90,0,0,0))
-	img.set_pixel(_frame["Position"].x + 1, 0, Color8(116,0,0,0))
-	img.set_pixel(_frame["Position"].x + 2, 0, Color8(114,0,0,0))
-	img.set_pixel(_frame["Position"].x + 3, 0, Color8(97,0,0,0))
-	img.set_pixel(_frame["Position"].x + 4, 0, Color8(121,0,0,0))
-	img.set_pixel(_frame["Position"].x + 5, 0, Color8(_data,0,0,0))
+	img.set_pixel(_frame["Position"].x + 0, y, Color8(90,0,0,0))
+	img.set_pixel(_frame["Position"].x + 1, y, Color8(116,0,0,0))
+	img.set_pixel(_frame["Position"].x + 2, y, Color8(114,0,0,0))
+	img.set_pixel(_frame["Position"].x + 3, y, Color8(97,0,0,0))
+	img.set_pixel(_frame["Position"].x + 4, y, Color8(121,0,0,0))
+	img.set_pixel(_frame["Position"].x + 5, y, Color8(_data,0,0,0))
 
 	images[index].texture = ImageTexture.create_from_image(img)
 
-static func read_pixel_data() -> int:
+static func read_pixel_data(_frame: Dictionary) -> int:
+	var img: Image = _frame["Image"].texture.get_image()
+
+	var pixels: int = 6
+	var res: String = ""
+
+	for i: int in pixels - 1:
+		res += char(floor(img.get_pixel(_frame["Position"].x + i, 0).r * 255))
+
+	if res == "ztray":
+		return floor(img.get_pixel(_frame["Position"].x + 6, 0).r * 255)
+	
 	return 0
 
-	#var img: Image = data[0].texture.get_image()
-	#img.set_pixel(0,0,Color8(90,0,0,0))
-	#img.set_pixel(1,0,Color8(116,0,0,0))
-	#img.set_pixel(2,0,Color8(114,0,0,0))
-	#img.set_pixel(3,0,Color8(97,0,0,0))
-	#img.set_pixel(3,0,Color8(121,0,0,0))
+static func read_pixel_data_at_pos(x: int, y: int, image: ImageData) -> void:
+	var img: Image = image.texture.get_image()
 
-	#data[0].texture = ImageTexture.create_from_image(img)
-	#print(data[0].texture.get_image().get_pixel(0,0))
-	#project_view.data_reorder.emit()
+	print(floor(img.get_pixel(x, y).r * 255))

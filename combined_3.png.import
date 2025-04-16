@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://otn0ahk2vrl0"
-path="res://.godot/imported/meetinghishortened_strip33.png-de52ead6b6c857ec6b007465c9fcfa59.ctex"
+uid="uid://bkdmce4chf6x1"
+path="res://.godot/imported/combined_3.png-2314d1debe2a393d21ddbfe75d33d7fb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://meetinghishortened_strip33.png"
-dest_files=["res://.godot/imported/meetinghishortened_strip33.png-de52ead6b6c857ec6b007465c9fcfa59.ctex"]
+source_file="res://combined_3.png"
+dest_files=["res://.godot/imported/combined_3.png-2314d1debe2a393d21ddbfe75d33d7fb.ctex"]
 
 [params]
 
