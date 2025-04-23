@@ -19,6 +19,8 @@ var rect_image_data: Dictionary[TextureRect, ImageData]
 var hovered_sprite: TextureRect = null
 var selected_sprite: TextureRect = null
 
+var most_frames: int
+
 func _init() -> void:
 	RenderingServer.set_default_clear_color(Color8(220,220,220))
 
@@ -92,7 +94,7 @@ func _input(event: InputEvent) -> void:
 			_line_edit.text = ""
 			return
 
-		PixelData.set_pixel_data(int(_line_edit.text), selected_frame, images_data)
+		PixelData.set_data(int(_line_edit.text), selected_frame, images_data)
 		data_reorder.emit()
 		_pixel_button.swap_state(!PixelButton.setting_pixel_data)
 		_line_edit.text = ""
@@ -119,6 +121,7 @@ func set_image_data() -> void:
 		if int(split_name[1]) != 0 and typeof(int(split_name[1])) == TYPE_INT:
 			data.frames = int(split_name[1])
 
+		most_frames = max(most_frames, data.frames)
 		data.texture = create_texture_from_image(img)
 		images_data.append(data)
 	
@@ -227,6 +230,7 @@ func _on_click() -> void:
 			selected_frame["Frame"] = frame_clicked
 			selected_frame["Image"] = rect_image_data[selected_sprite]
 			selected_frame["Size"] = Vector2(frame_size_x, rect_image_data[selected_sprite].height)
+
 			_line_edit.show()
 
 func create_texture_from_image(img: Image) -> ImageTexture:
@@ -260,6 +264,23 @@ func _on_export_pressed() -> void:
 			var tex_image = img.get_image()
 			image.blit_rect(tex_image, Rect2(Vector2.ZERO, tex_image.get_size()), Vector2(0, current_y))
 			current_y += tex_image.get_height()
+
+	image = PixelData.set_pixel(Vector2i(image.get_width() - 1, image.get_height() - 1), 90, image)
+	image = PixelData.set_pixel(Vector2i(image.get_width() - 2, image.get_height() - 1), 116, image)
+	image = PixelData.set_pixel(Vector2i(image.get_width() - 3, image.get_height() - 1), 114, image)
+	image = PixelData.set_pixel(Vector2i(image.get_width() - 4, image.get_height() - 1), 97, image)
+	image = PixelData.set_pixel(Vector2i(image.get_width() - 5, image.get_height() - 1), 121, image)
+
+	image = PixelData.set_pixel(Vector2i(image.get_width() - 6, image.get_height() - 1), _images_container.get_child_count(), image)
+	image = PixelData.set_pixel(Vector2i(image.get_width() - 7, image.get_height() - 1), most_frames, image)
+	
+	PixelData.read_pixel_data_at_pos_image(image.get_width() - 1, image.get_height() - 1,image)
+	PixelData.read_pixel_data_at_pos_image(image.get_width() - 2, image.get_height() - 1,image)
+	PixelData.read_pixel_data_at_pos_image(image.get_width() - 3, image.get_height() - 1,image)
+	PixelData.read_pixel_data_at_pos_image(image.get_width() - 4, image.get_height() - 1,image)
+	PixelData.read_pixel_data_at_pos_image(image.get_width() - 5, image.get_height() - 1,image)
+	PixelData.read_pixel_data_at_pos_image(image.get_width() - 6, image.get_height() - 1,image)
+	PixelData.read_pixel_data_at_pos_image(image.get_width() - 7, image.get_height() - 1,image)
 
 	var err = image.save_png("res://combined.png")
 
