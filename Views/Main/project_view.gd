@@ -282,7 +282,13 @@ func _on_export_pressed() -> void:
 	PixelData.read_pixel_data_at_pos_image(image.get_width() - 6, image.get_height() - 1,image)
 	PixelData.read_pixel_data_at_pos_image(image.get_width() - 7, image.get_height() - 1,image)
 
-	var err = image.save_png("res://combined.png")
+	image.set_meta("Frames", 59)
+
+	print(image.get_meta_list())
+	print(image.get_meta(&"Frames"))
+
+	var err: Error = image.save_exr("res://combined_1.exr")
+	image.save_webp("res://webp_test.webp")
 
 	if err == OK:
 		print("Exported!")
