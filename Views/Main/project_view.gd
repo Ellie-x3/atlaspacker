@@ -8,7 +8,7 @@ static var selected_sheet: TextureRect = null
 static var selected_frame: Dictionary[String, Variant]
 
 @onready var _open_button: ToolBarButton = %OpenButton
-@onready var _pixel_button: PixelButton = %PixelButton
+
 @onready var _images_container: Node2D = $Images
 @onready var _line_edit: LineEdit = %LineEdit
 
@@ -48,14 +48,6 @@ func _ready() -> void:
 			return
 	)
 
-	request_data.connect(func() -> void: 
-		if images_data.is_empty():
-			printerr("There is not image data to transfer")
-			return
-
-		_pixel_button.transfer_data.emit(images_data)
-	)
-
 	data_reorder.connect(func() -> void: 
 		remove_sprites()
 		create_sprite_from_texture(images_data)
@@ -79,26 +71,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			images_data[index + 1] = rect_image_data[selected_sprite]
 			data_reorder.emit()
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept") and PixelButton.setting_pixel_data:
-		if _line_edit.text == "" and selected_frame:
-			PixelData.read_pixel_data(selected_frame)
-			return
-
-		if _line_edit.text == "" or not selected_frame or not images_data:
-			printerr("Error setting pixel data")
-			return
-		
-		if int(_line_edit.text) == 0 or typeof(int(_line_edit.text)) != TYPE_INT:
-			printerr("Error only put numbers and not = to 0 in line")
-			_line_edit.text = ""
-			return
-
-		PixelData.set_data(int(_line_edit.text), selected_frame, images_data)
-		data_reorder.emit()
-		_pixel_button.swap_state(!PixelButton.setting_pixel_data)
-		_line_edit.text = ""
-		_line_edit.hide()
 	
 func create_images_from_files(files: PackedStringArray) -> void:
 	for img: String in files:
@@ -273,22 +245,8 @@ func _on_export_pressed() -> void:
 
 	image = PixelData.set_pixel(Vector2i(image.get_width() - 6, image.get_height() - 1), _images_container.get_child_count(), image)
 	image = PixelData.set_pixel(Vector2i(image.get_width() - 7, image.get_height() - 1), most_frames, image)
-	
-	PixelData.read_pixel_data_at_pos_image(image.get_width() - 1, image.get_height() - 1,image)
-	PixelData.read_pixel_data_at_pos_image(image.get_width() - 2, image.get_height() - 1,image)
-	PixelData.read_pixel_data_at_pos_image(image.get_width() - 3, image.get_height() - 1,image)
-	PixelData.read_pixel_data_at_pos_image(image.get_width() - 4, image.get_height() - 1,image)
-	PixelData.read_pixel_data_at_pos_image(image.get_width() - 5, image.get_height() - 1,image)
-	PixelData.read_pixel_data_at_pos_image(image.get_width() - 6, image.get_height() - 1,image)
-	PixelData.read_pixel_data_at_pos_image(image.get_width() - 7, image.get_height() - 1,image)
 
-	image.set_meta("Frames", 59)
-
-	print(image.get_meta_list())
-	print(image.get_meta(&"Frames"))
-
-	var err: Error = image.save_exr("res://combined_1.exr")
-	image.save_webp("res://webp_test.webp")
+	var err: Error = image.save_png("user://cutscenename_framecount.png")
 
 	if err == OK:
 		print("Exported!")
