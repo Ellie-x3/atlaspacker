@@ -28,7 +28,6 @@ func _ready() -> void:
 	_open_button.files_given.connect(func(files: PackedStringArray) -> void:
 
 		image_paths = {}
-		images_data = []
 		selected_frame = {}
 
 		for file: String in files:
@@ -71,6 +70,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			images_data[index + 1] = rect_image_data[selected_sprite]
 			data_reorder.emit()
 
+	if Input.is_action_just_pressed("Delete") and selected_sprite != null:
+		var to_delete: ImageData = rect_image_data[selected_sprite]
+		images_data.remove_at(images_data.find(to_delete))
+		data_reorder.emit()
+		print(images_data)
 	
 func create_images_from_files(files: PackedStringArray) -> void:
 	for img: String in files:
@@ -101,7 +105,15 @@ func set_image_data() -> void:
 	image_paths = {}
 
 func create_sprite_from_texture(data: Array[ImageData]) -> void:
-	var y_offset: float = 0
+	var y_offset: float = 0 
+
+	var children: Variant = _images_container.get_children()
+	if children.size() > 0:
+		for child: Variant in children:
+			child.queue_free()
+	#		if child is TextureRect:
+	#			var t: TextureRect = child
+	#			y_offset = max(y_offset, child.position.y + t.texture.get_height())
 
 	for image: ImageData in data:
 		var sprite: TextureRect = TextureRect.new()
